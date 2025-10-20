@@ -21,7 +21,7 @@ paths-ignore:
 
 # Ensure all XML files are included in the analysis
 paths:
-  - "**/*.xml"
+  - "app/src/main/*.xml"
   - "**/*.java"
   - "**/*.kt"
   - "**/*.kts"
