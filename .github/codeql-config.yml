@@ -1,0 +1,27 @@
+name: "Custom CodeQL Config"
+
+# Disable default queries to use only our custom ones
+disable-default-queries: false
+
+# Include additional query packs
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+# Custom query paths - we'll create a custom query for XML scanning
+paths:
+  - .github/codeql-queries
+
+# Include all XML files in analysis, not just standard Android manifest locations
+paths-ignore:
+  - "node_modules/**"
+  - "build/**"
+  - ".gradle/**"
+  - "gradle/wrapper/**"
+
+# Ensure all XML files are included in the analysis
+paths:
+  - "**/*.xml"
+  - "**/*.java"
+  - "**/*.kt"
+  - "**/*.kts"

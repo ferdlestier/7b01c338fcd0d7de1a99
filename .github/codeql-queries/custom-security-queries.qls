@@ -1,0 +1,6 @@
+- description: Custom Android security queries
+- queries: .
+- include:
+    kind: problem
+- exclude:
+    deprecated: //
