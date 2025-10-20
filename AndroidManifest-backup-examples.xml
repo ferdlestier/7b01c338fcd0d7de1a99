@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Application Backup Vulnerability Examples
+Reference: CodeQL java/android/backup-enabled
+Security Severity: 7.5 (CWE-312)
+
+This file demonstrates the android:allowBackup attribute vulnerability
+where sensitive application data can be extracted through automatic backups.
+-->
+
+<!-- VULNERABLE EXAMPLE 1: Explicitly allowing backups -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.vulnerable1">
+    
+    <!-- BAD: 'android:allowBackup' set to 'true' -->
+    <!-- This explicitly enables automatic backups, making sensitive data extractable -->
+    <application 
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+<!-- VULNERABLE EXAMPLE 2: Default behavior (no allowBackup specified) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.vulnerable2">
+    
+    <!-- BAD: no 'android:allowBackup' set, defaults to 'true' since Android 6.0+ -->
+    <!-- Without explicit setting, backups are enabled by default on Android 6.0+ -->
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+<!-- SECURE EXAMPLE: Disabling backups for sensitive applications -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.secure">
+    
+    <!-- GOOD: 'android:allowBackup' set to 'false' -->
+    <!-- This prevents automatic backups, protecting sensitive data -->
+    <application 
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+<!--
+VULNERABILITY DETAILS:
+- ID: java/android/backup-enabled
+- CWE: CWE-312 (Cleartext Storage of Sensitive Information)
+- Risk: Attackers can extract sensitive application data through automatic backups
+- Default: Since Android 6.0 (Marshmallow), allowBackup defaults to 'true'
+
+MITIGATION:
+For applications handling sensitive data (passwords, tokens, personal info):
+- Set android:allowBackup="false" in the application element
+- Consider implementing custom backup solutions if selective backup is needed
+- Use Android Keystore for cryptographic keys (not included in backups)
+
+REFERENCES:
+- Android Documentation: Auto Backup for Apps
+- OWASP Mobile Security Testing Guide: Android Backups
+- Common Weakness Enumeration: CWE-312
+-->
